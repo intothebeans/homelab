@@ -1,7 +1,9 @@
 ---
+name: bunkerweb
 services:
   bunkerweb:
-    image: bunkerity:bunkerweb:1.6.2
+    image: bunkerity/bunkerweb:1.6.2
+    container_name: bunkerweb
     ports:
       - 80:8080/tcp
       - 443:8443/tcp
@@ -13,49 +15,30 @@ services:
       - bw-universe
 
   bw-scheduler:
-    image: bunkerity:bunkerweb-scheduler:1.6.2
+    image: bunkerity/bunkerweb-scheduler:1.6.2
+    container_name: bw-scheduler
     env_file: .env
-    environment:
-      BUNKERWEB_INSTANCES: bunkerweb
     volumes:
       - $HOME/homelab-data/bunkerweb/data:/data
     restart: unless-stopped
-    command:
-      - --performance-schema=OFF
-      - --innodb-buffer-pool-size=64M
-      - --innodb-log-file-size=16M
-      - --max-connections=30
-      - --key-buffer-size=16M
-      - --query-cache-size=8M
-      - --query-cache-limit=512K
-      - --sort-buffer-size=512K
-      - --read-buffer-size=256K
-      - --read-rnd-buffer-size=512K
-      - --join-buffer-size=128K
-      - --thread-cache-size=8
-      - --max-allowed-packet=4M
-      - --table-open-cache=64
-      - --tmp-table-size=16M
     networks:
       - bw-universe
       - bw-db
-    deploy:
-      resources:
-        limits:
-          cpus: 0.5
-          memory: 256M
 
   bw-db:
     image: mariadb:11
+    container_name: bw-db
     env_file: .env
     volumes:
-      - $HOME/homelab-data/bunkerweb/db:/var/lib/mysql
+      - bw-db:/var/lib/mysql
     restart: unless-stopped
     networks:
+      - bw-universe
       - bw-db
 
   bw-ui:
     image: bunkerity/bunkerweb-ui:1.6.2
+    container_name: bw-ui
     env_file: .env
     restart: unless-stopped
     networks:
@@ -63,7 +46,8 @@ services:
       - bw-db
 
   redis:
-    image: valkey:7-alpine
+    image: valkey/valkey:7-alpine
+    container_name: bw-redis
     command: >
       redis-server
       --maxmemory 256mb
@@ -89,3 +73,4 @@ networks:
     name: bw-db
 volumes:
   redis-data:
+  bw-db:
