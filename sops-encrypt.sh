@@ -7,6 +7,6 @@ find . -type f \( -name ".env" -o -name ".env.*" -o -name "*.env" -o -name "*.en
         continue
     fi
     echo "Encrypting $file..."
-    sops encrypt -i $file
+    SOPS_AGE_KEY_FILE=$HOME/.age/age.key sops encrypt -i $file
 done
 echo "Done"
