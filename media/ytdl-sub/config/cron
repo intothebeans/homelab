@@ -1,0 +1,5 @@
+#!/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+echo 'Cron started, running ytdl-sub...'
+cd /config
+ytdl-sub --config=config.yaml sub subscriptions.yaml

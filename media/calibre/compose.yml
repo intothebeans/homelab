@@ -1,0 +1,18 @@
+name: calibre-web
+services:
+  calibre-web:
+    image: lscr.io/linuxserver/calibre-web:latest
+    container_name: calibre-web
+    restart: unless-stopped
+    environment:
+      - PUID=1001
+      - PGID=1006
+      - TZ=America/New_York
+      - DOCKER_MODS=linuxserver/mods:universal-calibre
+    ports:
+      - 100.110.247.44:8033:8083
+      - 127.0.0.1:8030:8083
+    volumes:
+      - $HOME/homelab-data/calibre-web:/config
+      - ${DATA_DIRECTORY}/calibreLibrary:/books
+    env_file: ../.env

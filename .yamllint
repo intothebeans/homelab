@@ -1,0 +1,17 @@
+---
+extends: default
+
+rules:
+    empty-lines:
+        max: 1
+    empty-values:
+        forbid-in-block-mappings: false
+    new-line-at-end-of-file: enable
+    quoted-strings:
+        quote-type: double
+        required: only-when-needed
+        allow-quoted-quotes: true
+        extra-required: ["^http://", "^localhost:"]
+    indentation:
+        check-multi-line-strings: true
+    trailing-spaces: enable

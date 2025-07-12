@@ -1,0 +1,81 @@
+name: firefly-iii
+services:
+  app:
+    image: fireflyiii/core:latest
+    hostname: app
+    container_name: firefly_iii_core
+    restart: always
+    volumes:
+      - firefly_iii_upload:/var/www/html/storage/upload
+    env_file: .env
+    networks:
+      - firefly_iii
+    ports:
+      - 127.0.0.1:8090:8080
+      - 100.110.247.44:8009:8080
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:lts
+    hostname: db
+    container_name: firefly_iii_db
+    restart: always
+    env_file: .db.env
+    networks:
+      - firefly_iii
+    volumes:
+      - firefly_iii_db:/var/lib/mysql
+
+  importer:
+    image: fireflyiii/data-importer:latest
+    hostname: importer
+    restart: always
+    container_name: firefly_iii_importer
+    networks:
+      - firefly_iii
+    ports:
+      - "8091:8080"
+    depends_on:
+      - app
+    env_file: .importer.env
+
+  cron:
+    image: alpine
+    restart: always
+    container_name: firefly_iii_cron
+    command: sh -c "echo \"*/30 * * * * wget -qO- http://app:8080/api/v1/cron/ELwfiGGVdCdQJsDV2X2sCQGXuTwPJuhq;echo\" | crontab - && crond -f -L /dev/stdout"
+    networks:
+      - firefly_iii
+
+  firefly-pico:
+    image: cioraneanu/firefly-pico:latest
+    container_name: firefly-pico
+    ports:
+      - 127.0.0.1:6972:80
+      - 100.110.247.44:6973:80
+    env_file: .pico.env
+    depends_on:
+      - app
+      - firefly-pico-db
+    networks:
+      - firefly_iii
+
+  firefly-pico-db:
+    image: postgres:latest
+    container_name: firefly_pico_db
+    restart: always
+    env_file: .pico.env
+    networks:
+      - firefly_iii
+    volumes:
+      - firefly_pico_db:/var/lib/postgresql/data
+
+volumes:
+  firefly_iii_upload:
+  firefly_iii_db:
+  firefly_pico_db:
+
+networks:
+  firefly_iii:
+    driver: bridge

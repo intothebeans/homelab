@@ -1,0 +1,21 @@
+name: readeck
+services:
+  readeck:
+    image: codeberg.org/readeck/readeck:latest
+    container_name: readeck
+    ports:
+      - 127.0.0.1:7900:8000
+      - 100.110.247.44:7800:8000
+    environment:
+      - READECK_LOG_LEVEL=info
+      - READECK_SERVER_HOST=0.0.0.0
+      - READECK_SERVER_PORT=8000
+      - READECK_ALLOWED_HOSTS=${READECK_ALLOWED_HOSTS}
+    volumes:
+      - /mnt/ssd/readeck:/readeck
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/bin/readeck", "healthcheck", "-config", "config.toml"]
+      interval: 30s
+      timeout: 2s
+      retries: 3

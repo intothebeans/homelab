@@ -1,0 +1,5 @@
+.cache
+examples
+*.log
+.bash*
+subscriptions.yaml

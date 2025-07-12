@@ -1,0 +1,20 @@
+name: jellyfin
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    devices:
+      - /dev/dri:/dev/dri
+    env_file: ../.env
+    environment:
+      - PUID=1000
+      - PGID=13000
+      - TZ=America/New_York
+      - DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel
+    ports:
+      - 127.0.0.1:8096:8096
+      - 100.110.247.44:8097:8096
+    volumes:
+      - $HOME/homelab-data/jellyfin:/config
+      - ${DATA_DIRECTORY}/media:/media
+    restart: unless-stopped

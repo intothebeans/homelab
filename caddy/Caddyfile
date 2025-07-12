@@ -1,0 +1,140 @@
+(tinyauth) {
+	forward_auth localhost:1412 {
+		uri /api/auth/caddy
+		copy_headers Remote-User Remote-Groups Remote-Email Remote-Name
+	}
+}
+
+{
+	email {$LE_EMAIL}
+	acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+	servers {
+		trusted_proxies static private_ranges
+	}
+	order webdav before file_server
+}
+
+# wevdav
+dav.stylus.{$PRIVATE_DOMAIN} {
+	basic_auth bcrypt {
+		{$DAV_STYLUS_USERNAME} $2a$10$evs1oAXFgg48Q..JEjzbieTCy.ea4OHGQecmvpewn5mdW0poXY4Oy
+	}
+	webdav {
+		root /dav
+	}
+}
+
+dav.zotero.{$PRIVATE_DOMAIN} {
+	basic_auth bcrypt {
+		{$DAV_ZOTERO_USERNAME} $2a$10$IHmpwLJwUyCdyCMSU8uKHuMYfjoFbDSWH.USahgZ/Qp0kFFVQdG5C
+	}
+	webdav {
+		root /dav
+	}
+}
+
+dav.goodnotes.{$PRIVATE_DOMAIN} {
+	basic_auth bcrypt {
+		{$DAV_GOODNOTES_USERNAME} $2a$10$wvl/t5GB93lNlFy7HV5U4eDc8eZpDrhJOUGowoRDeB.25dRDaCfKG
+	}
+	webdav {
+		root /dav
+	}
+}
+
+{$PRIVATE_DOMAIN} {
+	import tinyauth
+	reverse_proxy localhost:3000
+}
+
+adguard.{$PRIVATE_DOMAIN} {
+	reverse_proxy localhost:8083
+}
+
+ai.{$PRIVATE_DOMAIN} {
+	import tinyauth
+	reverse_proxy {$PI4_IP}:3002
+}
+
+books.{$PRIVATE_DOMAIN} {
+	import tinyauth
+	reverse_proxy localhost:8030
+}
+
+budget.{$PRIVATE_DOMAIN} {
+	import tinyauth
+	reverse_proxy localhost:8090
+}
+
+docs.{$PRIVATE_DOMAIN} {
+	reverse_proxy localhost:12000
+}
+
+dozzle.{$PRIVATE_DOMAIN} {
+	import tinyauth
+	reverse_proxy localhost:8088
+}
+
+files.{$PRIVATE_DOMAIN} {
+	import tinyauth
+	reverse_proxy localhost:1234
+}
+
+files.dash.{$PRIVATE_DOMAIN} {
+	import tinyauth
+	reverse_proxy localhost:8384
+}
+
+import.firefly.{$PRIVATE_DOMAIN} {
+	reverse_proxy localhost:8091
+}
+
+media.{$PRIVATE_DOMAIN} {
+	reverse_proxy localhost:8096
+}
+
+netdata.nuc.{$PRIVATE_DOMAIN} {
+	reverse_proxy localhost:19999
+}
+
+netdata.pi4.{$PRIVATE_DOMAIN} {
+	reverse_proxy {$PI4_IP}:19999
+}
+
+netdata.vps1.{$PRIVATE_DOMAIN} {
+	reverse_proxy 100.123.41.11:19999
+}
+
+pico.{$PRIVATE_DOMAIN} {
+	import tinyauth
+	reverse_proxy localhost:6972
+}
+pocketauth.{$PRIVATE_DOMAIN} {
+	reverse_proxy localhost:1411
+}
+read.{$PRIVATE_DOMAIN} {
+	reverse_proxy localhost:7900
+}
+save.{$PRIVATE_DOMAIN} {
+	reverse_proxy localhost:9669
+}
+
+searx.{$PRIVATE_DOMAIN} {
+	import tinyauth
+	reverse_proxy {$PI4_IP}:7777
+}
+
+sync.{$PRIVATE_DOMAIN} {
+	reverse_proxy localhost:5984
+}
+
+system.{$PRIVATE_DOMAIN} {
+	reverse_proxy {$VPS1_IP}:8090
+}
+
+tinyauth.{$PRIVATE_DOMAIN} {
+	reverse_proxy localhost:1412
+}
+uptime.{$PRIVATE_DOMAIN} {
+	reverse_proxy {$VPS1_IP}:3001
+}

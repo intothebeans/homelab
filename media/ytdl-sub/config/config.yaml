@@ -1,0 +1,134 @@
+# Bare-bones config. Here are some useful links to get started:
+#   Walk-through Guide:  https://github.com/jmbannon/ytdl-sub/wiki/1.-Introduction
+#   Config Examples:     https://github.com/jmbannon/ytdl-sub/tree/master/examples
+#   Prebuilt Presets:    https://ytdl-sub.readthedocs.io/en/latest/presets.html
+#   Config Docs:         https://ytdl-sub.readthedocs.io/en/latest/config.html
+#
+# The subscriptions in `subscriptions.yaml` uses prebuilt presets which do not require
+# any additions to this config. They can be downloaded using the command:
+#
+#   ytdl-sub --config config.yaml sub subscriptions.yaml
+#
+# Or dry-ran with:
+#
+#   ytdl-sub --dry-run --config config.yaml sub subscriptions.yaml
+#
+
+configuration:
+  working_directory: "/data/youtube/.ytdl-sub-downloads"
+
+presets:
+  tv_show_paths:
+    overrides:
+      tv_show_directory: "/data/youtube"
+      episode_title: "{title}"
+      # season_number: "{release_year}"
+      # season_number_padded: "{release_year}"
+      # episode_number: "{release_month_padded}-{release_day_padded}"
+      # episode_number_padded: "{release_month_padded}-{release_day_padded}"
+
+  no_shorts:
+    match_filters:
+      filters:
+        - "original_url!*=/shorts/"
+
+  storage_saver_quality:
+    format: "bv*[height<=1080][filesize_approx<=5000M]+ba/best[height<=720]"
+    ytdl_options:
+      merge_output_format: "mp4"
+    file_convert:
+      convert_to: "mp4"
+
+  sponsorblock:
+    chapters:
+      sponsorblock_categories:
+        - "preview"
+        - "outro"
+        - "intro"
+      remove_sponsorblock_categories:
+        - "sponsor"
+        - "interaction"
+        - "selfpromo"
+      force_key_frames: FALSE
+
+  sponsorblock_wait:
+    preset:
+      - "sponsorblock"
+    date_range:
+      before: "today-2days"
+
+  base:
+    preset:
+      - "Jellyfin TV Show by Date"
+      - "max_1080p"
+      - "tv_show_paths"
+    throttle_protection:
+      sleep_per_download_s:
+        min: 2.2
+        max: 10.8
+      sleep_per_subscription_s:
+        max: 14.1
+        min: 9.0
+      max_downloads_per_subscription:
+        min: 10
+        max: 50
+      subscription_download_probability: 1.0
+    chapters:
+      embed_chapters: True
+      # allow_chapters_from_comments: True
+    embed_thumbnail: True
+    subtitles:
+      languages:
+        - "en"
+      allow_auto_generated_subtitles: True
+      embed_subtitles: True
+    ytdl_options:
+      extractor_args:
+        lang:
+          - "en"
+      break_on_existing: True
+      windowsfilenames: True
+      writedescription: True
+      add_metadata: True
+      fixup: "detect_or_warn"
+    output_options:
+      download_archive_name: ".ytdl-sub-{subscription_name}-download-archive.json"
+      migrated_download_archive_name: ".ytdl-sub-{subscription_name_sanitized}-download-archive.json"
+      maintain_download_archive: True
+
+  Channel Archive:
+    preset:
+      - "base"
+      - "sponsorblock_wait"
+      - "storage_saver_quality"
+
+  Channel Recent:
+    preset:
+      - "base"
+      - "sponsorblock"
+      - "no_shorts"
+      - "season_by_year__episode_by_month_day_reversed"
+      - "Only Recent"
+
+    overrides:
+      only_recent_date_range: "2months"
+      only_recent_max_files: "15"
+
+  Playlist:
+    preset:
+      - "base"
+      - "sponsorblock"
+      - "storage_saver_quality"
+    overrides:
+      season_number: "{playlist_title}"
+      season_directory_name: "{playlist_title} - {playlist_uploader}"
+      episode_file_name: "s{season_number_sanitized}.e{playlist_index_padded}{release_date}-{title}"
+
+  Multi Channel Playlist:
+    preset:
+      - "Playlist"
+    overrides:
+      tv_show_namme: "{playlist_title}"
+      season_number: "{channel}"
+      season_directory_name: "{channel}"
+      episode_file_name: "s{channel_id}{season_number_sanitized}.e{release_date}-{title}"
