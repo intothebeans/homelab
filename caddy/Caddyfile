@@ -93,18 +93,6 @@ media.{$PRIVATE_DOMAIN} {
 	reverse_proxy localhost:8096
 }
 
-netdata.nuc.{$PRIVATE_DOMAIN} {
-	reverse_proxy localhost:19999
-}
-
-netdata.pi4.{$PRIVATE_DOMAIN} {
-	reverse_proxy {$PI4_IP}:19999
-}
-
-netdata.vps1.{$PRIVATE_DOMAIN} {
-	reverse_proxy 100.123.41.11:19999
-}
-
 pico.{$PRIVATE_DOMAIN} {
 	import tinyauth
 	reverse_proxy localhost:6972
