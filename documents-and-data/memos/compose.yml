@@ -1,0 +1,9 @@
+---
+services:
+  memos:
+    image: neosmemo/memos:stable
+    container_name: memos
+    volumes:
+      - $HOME/homelab-data/memos:/var/opt/memos
+    ports:
+      - 5230:5230
