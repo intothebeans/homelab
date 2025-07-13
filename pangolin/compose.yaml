@@ -1,3 +1,4 @@
+---
 name: pangolin
 services:
   pangolin:
@@ -5,11 +6,11 @@ services:
     container_name: pangolin
     restart: unless-stopped
     volumes:
-      - ./config:/app/config
+      - $HOME/homelab-data/pangolin:/app/config
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/api/v1/"]
-      interval: "10s"
-      timeout: "10s"
+      test: [CMD, curl, -f, "http://localhost:3001/api/v1/"]
+      interval: 10s
+      timeout: 10s
       retries: 15
 
   gerbil:
@@ -25,22 +26,22 @@ services:
       - --remoteConfig=http://pangolin:3001/api/v1/gerbil/get-config
       - --reportBandwidthTo=http://pangolin:3001/api/v1/gerbil/receive-bandwidth
     volumes:
-      - ./config/:/var/config
+      - $HOME/homelab-data/pangolin:/var/config
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
     ports:
       - 51820:51820/udp
-      - 4443:443 # Port for traefik because of the network_mode
-      - 8000:80 # Port for traefik because of the network_mode
+      - 4443:443
+      - 8000:80
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - host.docker.internal:host-gateway
   traefik:
     image: traefik:v3.4.1
     container_name: traefik
     restart: unless-stopped
     env_file: .env
-    network_mode: service:gerbil # Ports appear on the gerbil service
+    network_mode: service:gerbil
 
     depends_on:
       pangolin:
@@ -48,9 +49,9 @@ services:
     command:
       - --configFile=/etc/traefik/traefik_config.yml
     volumes:
-      - ./config/traefik:/etc/traefik:ro # Volume to store the Traefik configuration
-      - ./config/letsencrypt:/letsencrypt # Volume to store the Let's Encrypt certificates
-      - ./config/traefik/logs:/var/log/traefik # Volume to store Traefik logs
+      - $HOME/homelab-data/pangolin/traefik:/etc/traefik:ro
+      - $HOME/homelab-data/pangolin/letsencrypt:/letsencrypt
+      - .$HOME/homelab-data/pangolin/logs:/var/log/traefik
 
 networks:
   default:

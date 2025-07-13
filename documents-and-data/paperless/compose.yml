@@ -12,7 +12,7 @@ services:
     container_name: paperless-db
     restart: unless-stopped
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - $HOME/homelab-data/paperless/db:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
@@ -64,6 +64,5 @@ services:
       - protonmail:/root
 
 volumes:
-  pgdata:
   redisdata:
   protonmail:

@@ -25,7 +25,7 @@ services:
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - MYSQL_DATABASE=${DB_DATABASE}
     volumes:
-      - db:/var/lib/mysql
+      - $HOME/homelab-data/linkace/db:/var/lib/mysql
 
   redis:
     container_name: linkace_redis
@@ -33,7 +33,3 @@ services:
     restart: unless-stopped
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
-
-volumes:
-  db:
-    name: linkace_db

@@ -30,7 +30,7 @@ services:
     container_name: bw-db
     env_file: .env
     volumes:
-      - bw-db:/var/lib/mysql
+      - $HOME/homelab-data/bunkerweb/db:/var/lib/mysql
     restart: unless-stopped
     networks:
       - bw-universe
@@ -71,6 +71,6 @@ networks:
     name: bw-services
   bw-db:
     name: bw-db
+
 volumes:
   redis-data:
-  bw-db:
