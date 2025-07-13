@@ -2,6 +2,7 @@ name: miniflux
 services:
   miniflux:
     image: miniflux/miniflux:latest
+    user: 450:950
     ports:
       - "9999:8080"
     depends_on:
@@ -11,6 +12,7 @@ services:
 
   db:
     image: postgres:17-alpine
+    user: 450:950
     environment:
       - POSTGRES_USER=miniflux
       - POSTGRES_PASSWORD=secret

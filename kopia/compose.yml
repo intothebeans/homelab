@@ -3,6 +3,7 @@ name: backup
 services:
   kopia:
     image: kopia/kopia:latest
+    user: "1000"
     container_name: kopia
     hostname: kopia-docker
     restart: unless-stopped

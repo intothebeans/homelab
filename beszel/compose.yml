@@ -2,6 +2,7 @@ name: beszel
 services:
   beszel:
     image: henrygd/beszel:latest
+    user: 410:910
     container_name: beszel
     restart: unless-stopped
     ports:

@@ -37,6 +37,7 @@ services:
 
     sonic:
         image: archivebox/sonic:latest
+        user: 435:930
         container_name: ab-sonic
         expose:
             - 1491
@@ -46,6 +47,8 @@ services:
 
     pihole:
         image: pihole/pihole:latest
+        user: 435:930
+        container_name: ab-pihole
         ports:
             - 127.0.0.1:8090:80
         env_file: .env
@@ -64,6 +67,8 @@ services:
 
     pywb:
         image: webrecorder/pywb:latest
+        user: 435:930
+        container_name: ab-pywb
         entrypoint: |
             /bin/sh -c '(wb-manager init default || test $$? -eq 2) \
             && wb-manager add default /archivebox/archive/*/warc/*.warc.gz;\

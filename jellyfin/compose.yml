@@ -7,8 +7,8 @@ services:
       - /dev/dri:/dev/dri
     env_file: ../.env
     environment:
-      - PUID=1000
-      - PGID=13000
+      - PUID=441
+      - PGID=940
       - TZ=America/New_York
       - DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel
     ports:

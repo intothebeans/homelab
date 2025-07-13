@@ -5,8 +5,8 @@ services:
     container_name: syncthing
     hostname: syncthing-nuc
     environment:
-      - PUID=1002
-      - PGID=1006
+      - PUID=432
+      - PGID=930
       - TZ=America/New_York
     volumes:
       - $HOME/homelab-data/syncthing/:/config
@@ -21,6 +21,7 @@ services:
   filebrowser:
     image: gtstef/filebrowser
     container_name: filebrowser
+    user: 436:930
     env_file: .env
     environment:
       FILEBROWSER_CONFIG: data/config.yaml

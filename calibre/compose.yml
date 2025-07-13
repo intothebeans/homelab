@@ -5,8 +5,8 @@ services:
     container_name: calibre-web
     restart: unless-stopped
     environment:
-      - PUID=1001
-      - PGID=1006
+      - PUID=440
+      - PGID=940
       - TZ=America/New_York
       - DOCKER_MODS=linuxserver/mods:universal-calibre
     ports:

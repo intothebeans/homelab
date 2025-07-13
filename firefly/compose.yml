@@ -2,6 +2,7 @@ name: firefly-iii
 services:
   app:
     image: fireflyiii/core:latest
+    user: 437:930
     hostname: app
     container_name: firefly_iii_core
     restart: always
@@ -19,6 +20,7 @@ services:
   db:
     image: mariadb:lts
     hostname: db
+    user: 437:930
     container_name: firefly_iii_db
     restart: always
     env_file: .db.env
@@ -30,6 +32,7 @@ services:
   importer:
     image: fireflyiii/data-importer:latest
     hostname: importer
+    user: 437:930
     restart: always
     container_name: firefly_iii_importer
     networks:
@@ -42,6 +45,7 @@ services:
 
   cron:
     image: alpine
+    user: 437:930
     restart: always
     container_name: firefly_iii_cron
     command: sh -c "echo \"*/30 * * * * wget -qO- http://app:8080/api/v1/cron/ELwfiGGVdCdQJsDV2X2sCQGXuTwPJuhq;echo\" | crontab - && crond -f -L /dev/stdout"
@@ -50,6 +54,7 @@ services:
 
   firefly-pico:
     image: cioraneanu/firefly-pico:latest
+    user: 438:930
     container_name: firefly-pico
     ports:
       - 127.0.0.1:6972:80
@@ -63,6 +68,7 @@ services:
 
   firefly-pico-db:
     image: postgres:latest
+    user: 438:930
     container_name: firefly_pico_db
     restart: always
     env_file: .pico.env

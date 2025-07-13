@@ -3,6 +3,7 @@ name: pangolin
 services:
   pangolin:
     image: fosrl/pangolin:1.6.2
+    user: "401"
     container_name: pangolin
     restart: unless-stopped
     volumes:
@@ -16,6 +17,7 @@ services:
   gerbil:
     image: fosrl/gerbil:1.0.0
     container_name: gerbil
+    user: "401"
     restart: unless-stopped
     depends_on:
       pangolin:
@@ -38,11 +40,11 @@ services:
       - host.docker.internal:host-gateway
   traefik:
     image: traefik:v3.4.1
+    user: "401"
     container_name: traefik
     restart: unless-stopped
     env_file: .env
     network_mode: service:gerbil
-
     depends_on:
       pangolin:
         condition: service_healthy

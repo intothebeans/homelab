@@ -2,6 +2,7 @@ name: linkace
 services:
   app:
     image: docker.io/linkace/linkace:latest
+    user: "452"
     container_name: linkace
     restart: unless-stopped
     depends_on:
@@ -16,6 +17,7 @@ services:
   db:
     image: docker.io/library/mariadb:11.5
     container_name: linkace_db
+    user: "452"
     restart: unless-stopped
     command: mariadbd --character-set-server=utf8mb4 --collation-server=utf8mb4_bin
     env_file: .env
@@ -29,6 +31,7 @@ services:
 
   redis:
     container_name: linkace_redis
+    user: "452"
     image: docker.io/bitnami/redis:7.4
     restart: unless-stopped
     environment:

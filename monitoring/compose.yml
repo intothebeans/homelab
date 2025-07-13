@@ -2,6 +2,7 @@ name: monitoring
 services:
   dozzle:
     image: amir20/dozzle:latest
+    user: 412:910
     container_name: dozzle
     restart: always
     env_file: .env
@@ -12,6 +13,7 @@ services:
   diun:
     image: crazymax/diun:latest
     command: serve
+    user: 413:910
     container_name: diun
     env_file: .env
     environment:

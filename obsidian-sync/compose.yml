@@ -2,6 +2,7 @@ name: obsidian-sync
 services:
   couchdb:
     image: couchdb
+    user: 431:930
     container_name: couchdb-for-ols
     restart: always
     env_file: .env

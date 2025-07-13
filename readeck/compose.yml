@@ -3,6 +3,7 @@ services:
   readeck:
     image: codeberg.org/readeck/readeck:latest
     container_name: readeck
+    user: 451:950
     ports:
       - 127.0.0.1:7900:8000
       - 100.110.247.44:7800:8000

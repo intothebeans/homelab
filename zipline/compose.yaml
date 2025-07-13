@@ -3,6 +3,7 @@ services:
   postgresql:
     image: postgres:16-alpine
     container_name: zipline-db
+    user: "433"
     restart: unless-stopped
     env_file:
       - .env
@@ -21,6 +22,7 @@ services:
   zipline:
     image: ghcr.io/diced/zipline:latest
     container_name: zipline
+    user: "433"
     restart: unless-stopped
     ports:
       - 3043:3000

@@ -2,6 +2,7 @@
 services:
   memos:
     image: neosmemo/memos:stable
+    user: 434:930
     container_name: memos
     volumes:
       - $HOME/homelab-data/memos:/var/opt/memos
