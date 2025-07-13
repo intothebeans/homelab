@@ -1,18 +1,19 @@
+---
 name: linkace
 services:
   app:
     image: docker.io/linkace/linkace:latest
-    user: "452"
     container_name: linkace
+    user: "452"
     restart: unless-stopped
-    depends_on:
-      - db
     ports:
       - "127.0.0.1:9669:80"
       - "100.110.247.44:9668:80"
     volumes:
       - ./.env:/app/.env
       - $HOME/homelab-data/linkace/backups:/app/storage/app/backups
+    depends_on:
+      - db
 
   db:
     image: docker.io/library/mariadb:11.5
@@ -30,9 +31,9 @@ services:
       - $HOME/homelab-data/linkace/db:/var/lib/mysql
 
   redis:
+    image: docker.io/bitnami/redis:7.4
     container_name: linkace_redis
     user: "452"
-    image: docker.io/bitnami/redis:7.4
     restart: unless-stopped
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}

@@ -1,81 +1,83 @@
-name: firefly-iii
+---
+name: firefly
 services:
   app:
     image: fireflyiii/core:latest
-    user: 437:930
-    hostname: app
     container_name: firefly_iii_core
+    hostname: app
+    user: 437:930
     restart: always
-    volumes:
-      - $HOME/homelab-data/firefly-iii/upload:/var/www/html/storage/upload
-    env_file: .env
-    networks:
-      - firefly_iii
     ports:
       - 127.0.0.1:8090:8080
       - 100.110.247.44:8009:8080
+    env_file: .env
+    volumes:
+      - $HOME/homelab-data/firefly-iii/upload:/var/www/html/storage/upload
+    networks:
+      - firefly_iii
     depends_on:
       - db
 
   db:
     image: mariadb:lts
+    container_name: firefly_iii_db
     hostname: db
     user: 437:930
-    container_name: firefly_iii_db
     restart: always
     env_file: .db.env
-    networks:
-      - firefly_iii
     volumes:
       - $HOME/homelab-data/firefly-iii/db:/var/lib/mysql
+    networks:
+      - firefly_iii
 
   importer:
     image: fireflyiii/data-importer:latest
+    container_name: firefly_iii_importer
     hostname: importer
     user: 437:930
     restart: always
-    container_name: firefly_iii_importer
-    networks:
-      - firefly_iii
     ports:
       - "8091:8080"
+    env_file: .importer.env
+    networks:
+      - firefly_iii
     depends_on:
       - app
-    env_file: .importer.env
 
   cron:
     image: alpine
+    container_name: firefly_iii_cron
     user: 437:930
     restart: always
-    container_name: firefly_iii_cron
     command: sh -c "echo \"*/30 * * * * wget -qO- http://app:8080/api/v1/cron/ELwfiGGVdCdQJsDV2X2sCQGXuTwPJuhq;echo\" | crontab - && crond -f -L /dev/stdout"
     networks:
       - firefly_iii
 
   firefly-pico:
     image: cioraneanu/firefly-pico:latest
-    user: 438:930
     container_name: firefly-pico
+    user: 438:930
+    restart: unless-stopped
     ports:
       - 127.0.0.1:6972:80
       - 100.110.247.44:6973:80
     env_file: .pico.env
+    networks:
+      - firefly_iii
     depends_on:
       - app
       - firefly-pico-db
-    networks:
-      - firefly_iii
 
   firefly-pico-db:
     image: postgres:latest
-    user: 438:930
     container_name: firefly_pico_db
-    restart: always
+    user: 438:930
+    restart: unless-stopped
     env_file: .pico.env
-    networks:
-      - firefly_iii
     volumes:
       - $HOME/homelab-data/firefly-pico/db:/var/lib/postgresql/data
+    networks:
+      - firefly_iii
 
 networks:
   firefly_iii:

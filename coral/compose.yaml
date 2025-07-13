@@ -3,28 +3,32 @@ name: coral
 services:
   coral:
     image: coralproject/talk:7
-    user: "461"
     container_name: coral
-    restart: always
+    user: "461"
+    restart: unless-stopped
     ports:
       - 127.0.0.1:5000:5000
-    depends_on:
-      - mongo
-      - redis
     environment:
       - MONGODB_URI=mongodb://mongo:27017/coral
       - REDIS_URI=redis://redis:6379
       - SIGNING_SECRET=${SIGNING_SECRET}
+    depends_on:
+      - mongo
+      - redis
+
   mongo:
     image: mongo:4.2
-    user: "461"
     container_name: coral-redis
+    user: "461"
+    restart: unless-stopped
     volumes:
       - $HOME/homelab-data/coral/db:/data/db
+
   redis:
     image: redis:3.2
-    user: "461"
     container_name: coral-redis
+    user: "461"
+    restart: unless-stopped
     volumes:
       - coral-redis:/data
 

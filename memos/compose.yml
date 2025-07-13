@@ -1,10 +1,11 @@
 ---
+name: memos
 services:
   memos:
     image: neosmemo/memos:stable
-    user: 434:930
     container_name: memos
-    volumes:
-      - $HOME/homelab-data/memos:/var/opt/memos
+    user: 434:930
     ports:
       - 5230:5230
+    volumes:
+      - $HOME/homelab-data/memos:/var/opt/memos

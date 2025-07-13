@@ -1,13 +1,15 @@
+---
+name: pocket-id
 services:
   pocket-id:
     image: ghcr.io/pocket-id/pocket-id:v1
     container_name: pocket-id
     user: 420:920
     restart: unless-stopped
-    env_file: .env
     ports:
       - 127.0.0.1:1411:1411
       - 100.110.247.44:14111:1411
+    env_file: .env
     volumes:
       - $HOME/homelab-data/pocket-id:/app/data
     healthcheck:

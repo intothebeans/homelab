@@ -7,13 +7,13 @@ services:
     container_name: rybbit_clickhouse
     user: "462"
     restart: unless-stopped
-    volumes:
-      - $HOME/homelab-data/rybbit/clickhouse:/var/lib/clickhouse
-      - ./clickhouse_config:/etc/clickhouse-server/config.d
     environment:
       - CLICKHOUSE_USER=${CLICKHOUSE_USER}
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
       - CLICKHOUSE_DATABASE=${CLICKHOUSE_DATABASE}
+    volumes:
+      - $HOME/homelab-data/rybbit/clickhouse:/var/lib/clickhouse
+      - ./clickhouse_config:/etc/clickhouse-server/config.d
     healthcheck:
       test:
         [
@@ -31,15 +31,15 @@ services:
 
   postgres:
     image: postgres:17.4
-    user: "462"
     container_name: rybbit_postgres
+    user: "462"
     restart: unless-stopped
-    volumes:
-      - $HOME/homelab-data/rybbit/db:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - $HOME/homelab-data/rybbit/db:/var/lib/postgresql/data
     healthcheck:
       # yamllint disable-line rule:quoted-strings
       test: [CMD-SHELL, "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
@@ -52,6 +52,7 @@ services:
     image: ghcr.io/rybbit-io/rybbit-backend:latest
     container_name: rybbit_backend
     user: "462"
+    restart: unless-stopped
     ports:
       - ${HOST_BACKEND_PORT}:3001
     environment:
@@ -67,11 +68,6 @@ services:
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
       - BASE_URL=${BASE_URL}
       - DISABLE_SIGNUP=${DISABLE_SIGNUP}
-    depends_on:
-      clickhouse:
-        condition: service_healthy
-      postgres:
-        condition: service_started
     healthcheck:
       test:
         [
@@ -86,12 +82,17 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-    restart: unless-stopped
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+      postgres:
+        condition: service_started
 
   client:
     image: ghcr.io/rybbit-io/rybbit-client:latest
     container_name: rybbit_client
     user: "462"
+    restart: unless-stopped
     ports:
       - ${HOST_CLIENT_PORT}:3002
     environment:
@@ -100,4 +101,3 @@ services:
       - NEXT_PUBLIC_DISABLE_SIGNUP=${DISABLE_SIGNUP}
     depends_on:
       - backend
-    restart: unless-stopped

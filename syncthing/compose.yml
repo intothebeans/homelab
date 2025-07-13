@@ -1,9 +1,17 @@
+---
 name: syncthing
 services:
   syncthing:
     image: lscr.io/linuxserver/syncthing:latest
     container_name: syncthing
     hostname: syncthing-nuc
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:8384:8384
+      - 22000:22000/tcp
+      - 22000:22000/udp
+      - 21027:21027/udp
+    env_file: .env
     environment:
       - PUID=432
       - PGID=930
@@ -11,17 +19,13 @@ services:
     volumes:
       - $HOME/homelab-data/syncthing/:/config
       - ${DATA_DIRECTORY}/remote-data/:/data
-    env_file: .env
-    ports:
-      - 127.0.0.1:8384:8384
-      - 22000:22000/tcp
-      - 22000:22000/udp
-      - 21027:21027/udp
-    restart: unless-stopped
   filebrowser:
     image: gtstef/filebrowser
     container_name: filebrowser
     user: 436:930
+    restart: unless-stopped
+    ports:
+      - 18000:80
     env_file: .env
     environment:
       FILEBROWSER_CONFIG: data/config.yaml
@@ -31,6 +35,3 @@ services:
       - ${DATA_DIRECTORY}/remote-data:/srv
       - ./config:/home/filebrowser/data
       - ./tmp/:/home/filebrowser/tmp/
-    ports:
-      - 18000:80
-    restart: unless-stopped

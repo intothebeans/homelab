@@ -3,8 +3,8 @@ name: pangolin
 services:
   pangolin:
     image: fosrl/pangolin:1.6.2
-    user: "401"
     container_name: pangolin
+    user: "401"
     restart: unless-stopped
     volumes:
       - $HOME/homelab-data/pangolin:/app/config
@@ -19,41 +19,42 @@ services:
     container_name: gerbil
     user: "401"
     restart: unless-stopped
-    depends_on:
-      pangolin:
-        condition: service_healthy
     command:
       - --reachableAt=http://gerbil:3003
       - --generateAndSaveKeyTo=/var/config/key
       - --remoteConfig=http://pangolin:3001/api/v1/gerbil/get-config
       - --reportBandwidthTo=http://pangolin:3001/api/v1/gerbil/receive-bandwidth
+    ports:
+      - 51820:51820/udp
+      - 4443:443
+      - 8000:80
     volumes:
       - $HOME/homelab-data/pangolin:/var/config
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
-    ports:
-      - 51820:51820/udp
-      - 4443:443
-      - 8000:80
     extra_hosts:
       - host.docker.internal:host-gateway
-  traefik:
-    image: traefik:v3.4.1
-    user: "401"
-    container_name: traefik
-    restart: unless-stopped
-    env_file: .env
-    network_mode: service:gerbil
     depends_on:
       pangolin:
         condition: service_healthy
+
+  traefik:
+    image: traefik:v3.4.1
+    container_name: traefik
+    user: "401"
+    restart: unless-stopped
     command:
       - --configFile=/etc/traefik/traefik_config.yml
+    network_mode: service:gerbil
+    env_file: .env
     volumes:
       - $HOME/homelab-data/pangolin/traefik:/etc/traefik:ro
       - $HOME/homelab-data/pangolin/letsencrypt:/letsencrypt
       - .$HOME/homelab-data/pangolin/logs:/var/log/traefik
+    depends_on:
+      pangolin:
+        condition: service_healthy
 
 networks:
   default:

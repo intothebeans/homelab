@@ -3,12 +3,10 @@ name: backup
 services:
   kopia:
     image: kopia/kopia:latest
-    user: "1000"
     container_name: kopia
     hostname: kopia-docker
+    user: "1000"
     restart: unless-stopped
-    ports:
-      - 51515:51515
     command:
       - server
       - start
@@ -17,6 +15,8 @@ services:
       - --address=0.0.0.0:51515
       - --server-username=${USERNAME}
       - --server-password=${SECRET_PASSWORD}
+    ports:
+      - 51515:51515
     env_file: .env
     volumes:
       - $HOME/homelab-data/kopia/config:/app/config

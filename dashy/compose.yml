@@ -1,17 +1,18 @@
+---
 name: dashy
 services:
   dashy:
     image: lissy93/dashy
     container_name: Dashy
     user: 470:970
-    volumes:
-      - ./config.yaml:/app/user-data/conf.yml
-      - $HOME/homelab-data/dashy:/app/user-data
+    restart: unless-stopped
     ports:
       - 8084:8080
     environment:
       - NODE_ENV=production
-    restart: unless-stopped
+    volumes:
+      - ./config.yaml:/app/user-data/conf.yml
+      - $HOME/homelab-data/dashy:/app/user-data
     healthcheck:
       test: ["CMD", "node", "/app/services/healthcheck"]
       interval: 1m30s

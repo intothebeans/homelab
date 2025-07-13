@@ -1,9 +1,10 @@
+---
 name: beszel
 services:
   beszel:
     image: henrygd/beszel:latest
-    user: 410:910
     container_name: beszel
+    user: 410:910
     restart: unless-stopped
     ports:
       - 8090:8090
