@@ -37,3 +37,5 @@ services:
 
 volumes:
   valkey-data:
+    name: sx-valkey-data
+    external: true

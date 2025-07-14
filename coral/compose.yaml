@@ -34,3 +34,5 @@ services:
 
 volumes:
   coral-redis:
+    name: coral-redis
+    external: true

@@ -3,17 +3,14 @@ services:
   caddy:
     build: ./Dockerfile
     container_name: caddy
-    user: 400:33
+    user: 995:33
     restart: always
     network_mode: host
     env_file: .env
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
+      - $HOME/homelab-data/caddy/data:/data
+      - $HOME/homelab-data/caddy/config:/config
       - /mnt/ssd/remote-data/dav/:/dav:rw
     labels:
       - diun.enable=false
-volumes:
-  caddy_data:
-  caddy_config:

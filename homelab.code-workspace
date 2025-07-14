@@ -7,13 +7,10 @@
     {
       "name": "homelab-ansible",
       "path": "../homelab-ansible"
-    },
-    {
-      "name": "homelab-data",
-      "path": "../homelab-data"
     }
   ],
   "settings": {
-    "ansible.python.interpreterPath": "/usr/bin/python3"
+    "ansible.python.interpreterPath": "/bin/python3",
+    "editor.acceptSuggestionOnEnter": "on"
   }
 }

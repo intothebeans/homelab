@@ -2,13 +2,13 @@
 name: obsidian-sync
 services:
   couchdb:
-    image: couchdb
+    image: couchdb:3.4.2
     container_name: couchdb-for-ols
-    user: 431:930
+    user: 1000:930
     restart: always
     ports:
       - 127.0.0.1:5984:5984
     env_file: .env
     volumes:
       - ${DATA_DIRECTORY}/obsidian:/opt/couchdb/data
-      - $HOME/homelab-data/obsidian-sync:/opt/couchdb/etc/local.d
+      - ./config:/opt/couchdb/etc/local.d

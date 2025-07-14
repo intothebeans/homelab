@@ -79,3 +79,5 @@ networks:
 
 volumes:
   redis-data:
+    name: bw-redis-data
+    external: true

@@ -72,4 +72,8 @@ services:
 
 volumes:
   redisdata:
+    name: paperless-redisdata
+    external: true
   protonmail:
+    name: paperless-protonmail
+    external: true

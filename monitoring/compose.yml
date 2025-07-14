@@ -4,7 +4,7 @@ services:
   dozzle:
     image: amir20/dozzle:latest
     container_name: dozzle
-    user: 412:910
+    user: 412:996
     restart: always
     ports:
       - 8088:8080
@@ -14,7 +14,7 @@ services:
   diun:
     image: crazymax/diun:latest
     container_name: diun
-    user: 413:910
+    user: 413:996
     restart: always
     command: serve
     env_file: .env
@@ -28,7 +28,5 @@ services:
       - DIUN_NOTIF_PUSHOVER_TOKEN=${PUSHOVER_TOKEN}
       - DIUN_NOTIF_PUSHOVER_RECIPIENT=${PUSHOVER_CLIENT_ID}
     volumes:
-      - diun_data:/data
+      - $HOME/homelab-data/diun:/data
       - /var/run/docker.sock:/var/run/docker.sock
-volumes:
-  diun_data:
