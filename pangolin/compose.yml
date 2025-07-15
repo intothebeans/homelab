@@ -17,7 +17,6 @@ services:
   gerbil:
     image: fosrl/gerbil:1.0.0
     container_name: gerbil
-    user: "401"
     restart: unless-stopped
     command:
       - --reachableAt=http://gerbil:3003
@@ -26,8 +25,8 @@ services:
       - --reportBandwidthTo=http://pangolin:3001/api/v1/gerbil/receive-bandwidth
     ports:
       - 51820:51820/udp
-      - 4443:443
-      - 8000:80
+      - 443:443
+      - 80:80
     volumes:
       - $HOME/homelab-data/pangolin:/var/config
     cap_add:
