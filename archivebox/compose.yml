@@ -15,7 +15,6 @@ services:
   archivebox:
     image: archivebox/archivebox:latest
     container_name: archivebox
-    user: 435:930
     restart: unless-stopped
     ports:
       - 8070:8000
@@ -26,11 +25,12 @@ services:
       - dns
     dns:
       - 172.47.0.53
+    depends_on: 
+      - pihole
 
   archivebox_scheduler:
     image: archivebox/archivebox:latest
     container_name: ab-scheduler
-    user: 435:930
     restart: unless-stopped
     command: schedule --foreground --update --every=day
     env_file: .env
@@ -38,6 +38,9 @@ services:
       - $HOME/homelab-data/archivebox/data:/data
     cpus: 1
     mem_limit: 2048m
+    depends_on: 
+      - archivebox
+      - pihole
 
   sonic:
     image: archivebox/sonic:latest
@@ -87,7 +90,9 @@ services:
       - INIT_COLLECTION=archivebox
     volumes:
       - $HOME/homelab-data/archivebox/data:/data
-      - $HOME/homelab-data/data/wayback:/webarchive
+      - $HOME/homelab-data/archivebox/data/wayback:/webarchive
+    depends_on:
+      - archivebox
 
 networks:
   dns:
