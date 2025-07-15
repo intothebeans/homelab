@@ -53,7 +53,6 @@ services:
   pihole:
     image: pihole/pihole:latest
     container_name: ab-pihole
-    user: 435:930
     restart: unless-stopped
     ports:
       - 127.0.0.1:8090:80
@@ -61,6 +60,8 @@ services:
     environment:
       - WEBPASSWORD=${PIHOLE_PASSWORD}
       - DNSMASQ_LISTENING=all
+      - PIHOLE_UID=435
+      - PIHOLE_GID=930
     volumes:
       - $HOME/homelab-data/archivebox/etc/pihole:/etc/pihole
       - $HOME/homelab-data/archivebox/etc/dnsmasq:/etc/dnsmasq.d
