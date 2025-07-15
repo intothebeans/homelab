@@ -4,7 +4,6 @@ services:
   beszel:
     image: henrygd/beszel:latest
     container_name: beszel
-    user: "410"
     restart: unless-stopped
     ports:
       - 8090:8090
