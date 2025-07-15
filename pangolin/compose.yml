@@ -51,7 +51,7 @@ services:
     volumes:
       - $HOME/homelab-data/pangolin/traefik:/etc/traefik:ro
       - $HOME/homelab-data/pangolin/letsencrypt:/letsencrypt
-      - .$HOME/homelab-data/pangolin/logs:/var/log/traefik
+      - $HOME/homelab-data/pangolin/logs:/var/log/traefik
     depends_on:
       pangolin:
         condition: service_healthy
