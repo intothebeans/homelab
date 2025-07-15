@@ -1,16 +1,6 @@
 ---
-name: monitoring
+name: diun
 services:
-  dozzle:
-    image: amir20/dozzle:latest
-    container_name: dozzle
-    user: 412:996
-    restart: always
-    ports:
-      - 8088:8080
-    env_file: .env
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
   diun:
     image: crazymax/diun:latest
     container_name: diun
