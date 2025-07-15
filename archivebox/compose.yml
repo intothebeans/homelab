@@ -25,7 +25,7 @@ services:
     networks:
       - dns
     dns:
-      - 172.20.0.53
+      - 172.47.0.53
 
   archivebox_scheduler:
     image: archivebox/archivebox:latest
@@ -69,7 +69,7 @@ services:
       - 9.9.9.9
     networks:
       dns:
-        ipv4_address: 172.20.0.53
+        ipv4_address: 172.47.0.53
 
   pywb:
     image: webrecorder/pywb:latest
@@ -93,7 +93,7 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 172.20.0.0/24
+        - subnet: 172.47.0.0/24
 
 volumes:
   ab-sonic:
