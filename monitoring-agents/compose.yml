@@ -1,4 +1,5 @@
 ---
+name: agents
 services:
   beszel-agent:
     image: "henrygd/beszel-agent"
@@ -10,3 +11,12 @@ services:
     environment:
       LISTEN: 45876
       KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMBnAbk+kLp9UlbZs43PUi7iS8X39PGUfeSPdVGdMM9q"
+  dozzle-agent:
+    image: amir20/dozzle:latest
+    container_name: dozzle-agent
+    command: agent
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 192.168.1.201:7007:7007
