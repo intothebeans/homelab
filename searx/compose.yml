@@ -23,6 +23,7 @@ services:
     ports:
       - "7777:8080"
     environment:
+      - SEARXNG_SECRET=${SEARXNG_SECRET}
       - SEARXNG_BASE_URL=https://searx.beanscloud.me/
       - UWSGI_WORKERS=4
       - UWSGI_THREADS=4
