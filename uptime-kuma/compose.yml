@@ -4,8 +4,10 @@ services:
   uptime-kuma:
     image: louislam/uptime-kuma:1
     container_name: uptime-kuma
-    user: 414:910
     restart: unless-stopped
+    environment:
+      - PUID=414
+      - PGID=996
     ports:
       - 3001:3001
     volumes:
