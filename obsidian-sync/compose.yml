@@ -11,4 +11,4 @@ services:
     env_file: .env
     volumes:
       - ${DATA_DIRECTORY}/obsidian:/opt/couchdb/data
-      - ./config:/opt/couchdb/etc/local.d
+      - $HOME/homelab-data/obsidian/config:/opt/couchdb/etc/local.d
