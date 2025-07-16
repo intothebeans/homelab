@@ -51,11 +51,6 @@ adguard.{$PRIVATE_DOMAIN} {
 	reverse_proxy localhost:8083
 }
 
-ai.{$PRIVATE_DOMAIN} {
-	import tinyauth
-	reverse_proxy {$PI4_IP}:3002
-}
-
 books.{$PRIVATE_DOMAIN} {
 	import tinyauth
 	reverse_proxy localhost:8030
@@ -77,10 +72,10 @@ dozzle.{$PRIVATE_DOMAIN} {
 
 files.{$PRIVATE_DOMAIN} {
 	import tinyauth
-	reverse_proxy localhost:1234
+	reverse_proxy localhost:18000
 }
 
-files.dash.{$PRIVATE_DOMAIN} {
+files.sync.{$PRIVATE_DOMAIN} {
 	import tinyauth
 	reverse_proxy localhost:8384
 }
@@ -97,14 +92,13 @@ pico.{$PRIVATE_DOMAIN} {
 	import tinyauth
 	reverse_proxy localhost:6972
 }
+
 pocketauth.{$PRIVATE_DOMAIN} {
 	reverse_proxy localhost:1411
 }
+
 read.{$PRIVATE_DOMAIN} {
 	reverse_proxy localhost:7900
-}
-save.{$PRIVATE_DOMAIN} {
-	reverse_proxy localhost:9669
 }
 
 searx.{$PRIVATE_DOMAIN} {

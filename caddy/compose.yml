@@ -1,7 +1,7 @@
 ---
 services:
   caddy:
-    build: ./Dockerfile
+    build: ./
     container_name: caddy
     user: 995:33
     restart: always
