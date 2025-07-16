@@ -7,8 +7,7 @@ services:
     user: 420:920
     restart: unless-stopped
     ports:
-      - 127.0.0.1:1411:1411
-      - 100.110.247.44:14111:1411
+      - 1411:1411
     env_file: .env
     volumes:
       - $HOME/homelab-data/pocket-id:/app/data
