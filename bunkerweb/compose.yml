@@ -4,7 +4,6 @@ services:
   bunkerweb:
     image: bunkerity/bunkerweb:1.6.2
     container_name: bunkerweb
-    user: "422"
     restart: unless-stopped
     ports:
       - 80:8080/tcp
@@ -18,7 +17,6 @@ services:
   bw-scheduler:
     image: bunkerity/bunkerweb-scheduler:1.6.2
     container_name: bw-scheduler
-    user: "422"
     restart: unless-stopped
     env_file: .env
     volumes:
@@ -42,7 +40,6 @@ services:
   bw-ui:
     image: bunkerity/bunkerweb-ui:1.6.2
     container_name: bw-ui
-    user: "422"
     restart: unless-stopped
     env_file: .env
     networks:
