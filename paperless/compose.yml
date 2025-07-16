@@ -24,7 +24,6 @@ services:
   webserver:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
     container_name: paperless
-    user: 430:930
     restart: unless-stopped
     ports:
       - "127.0.0.1:12000:8000"
@@ -65,7 +64,6 @@ services:
   protonmail-bridge:
     image: shenxn/protonmail-bridge
     container_name: protonmail-bridge
-    user: 430:930
     restart: unless-stopped
     volumes:
       - protonmail:/root

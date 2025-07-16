@@ -5,7 +5,6 @@ services:
     image: fireflyiii/core:latest
     container_name: firefly_iii_core
     hostname: app
-    user: 437:930
     restart: always
     ports:
       - 127.0.0.1:8090:8080
@@ -34,7 +33,6 @@ services:
     image: fireflyiii/data-importer:latest
     container_name: firefly_iii_importer
     hostname: importer
-    user: 437:930
     restart: always
     ports:
       - "8091:8080"
@@ -47,7 +45,6 @@ services:
   cron:
     image: alpine
     container_name: firefly_iii_cron
-    user: 437:930
     restart: always
     command: sh -c "echo \"*/30 * * * * wget -qO- http://app:8080/api/v1/cron/ELwfiGGVdCdQJsDV2X2sCQGXuTwPJuhq;echo\" | crontab - && crond -f -L /dev/stdout"
     networks:
@@ -56,7 +53,6 @@ services:
   firefly-pico:
     image: cioraneanu/firefly-pico:latest
     container_name: firefly-pico
-    user: 438:930
     restart: unless-stopped
     ports:
       - 127.0.0.1:6972:80

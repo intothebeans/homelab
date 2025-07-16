@@ -10,3 +10,10 @@ services:
       - 127.0.0.1:1412:3000
       - 100.110.247.44:14122:3000
     env_file: .env
+    networks:
+      - security
+
+networks:
+  security:
+    name: security
+    external: true

@@ -22,7 +22,7 @@ services:
   filebrowser:
     image: gtstef/filebrowser
     container_name: filebrowser
-    user: 436:930
+    user: 432:930
     restart: unless-stopped
     ports:
       - 18000:80
