@@ -8,7 +8,6 @@ services:
     restart: unless-stopped
     ports:
       - "127.0.0.1:9669:80"
-      - "100.110.247.44:9668:80"
     volumes:
       - ./.env:/app/.env
       - $HOME/homelab-data/linkace/backups:/app/storage/app/backups
