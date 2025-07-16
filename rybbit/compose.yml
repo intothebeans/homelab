@@ -1,6 +1,5 @@
 ---
 name: rybbit
-
 services:
   clickhouse:
     image: clickhouse/clickhouse-server:25.4.2
@@ -8,9 +7,9 @@ services:
     user: "462"
     restart: unless-stopped
     environment:
-      - CLICKHOUSE_USER=${CLICKHOUSE_USER}
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
-      - CLICKHOUSE_DATABASE=${CLICKHOUSE_DATABASE}
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_DB=${CLICKHOUSE_DB}
     volumes:
       - $HOME/homelab-data/rybbit/clickhouse:/var/lib/clickhouse
       - ./clickhouse_config:/etc/clickhouse-server/config.d

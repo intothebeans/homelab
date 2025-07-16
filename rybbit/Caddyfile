@@ -1,0 +1,9 @@
+http://rybbit_caddy {
+    encode zstd gzip
+    request_body max_size 10MB
+    handle /api/* {
+        reverse_proxy backend:3001
+    }
+
+        reverse_proxy client:3002
+}
