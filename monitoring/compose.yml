@@ -1,0 +1,105 @@
+---
+name: monitoring-services
+services:
+  diun:
+    image: crazymax/diun:latest
+    container_name: diun
+    user: 413:996
+    restart: always
+    command: serve
+    environment:
+      - TZ=America/New_York
+      - DIUN_WATCH_WORKERS=10
+      - DIUN_WATCH_SCHEDULE=0 */6 * * *
+      - DIUN_WATCH_JITTER=30s
+      - DIUN_PROVIDERS_DOCKER=true
+      - DIUN_PROVIDERS_DOCKER_WATCHBYDEFAULT=true
+      - DIUN_NOTIF_PUSHOVER_TOKEN=${PUSHOVER_TOKEN}
+      - DIUN_NOTIF_PUSHOVER_RECIPIENT=${PUSHOVER_CLIENT_ID}
+    volumes:
+      - $HOME/homelab-data/diun:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    profiles:
+      - nuc
+      - vps1
+      - vps2
+      - pi4
+
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    user: 412:996 # dozzle:docker
+    restart: always
+    ports:
+      - 8088:8080
+    environment:
+      - DOZZLE_REMOTE_AGENT=${DOZZLE_REMOTE_AGENTS}
+      - DOZZLE_ENABLE_ACTIONS=true
+      - DOZZLE_ENABLE_SHELL=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    profiles:
+      - nuc
+
+  beszel:
+    image: henrygd/beszel:latest
+    container_name: beszel
+    user: 412:996 # dozzle:docker
+    restart: unless-stopped
+    ports:
+      - ${VARIABLE_BIND_ADDRESS}:8090:8090
+    volumes:
+      - $HOME/homelab-data/beszel/beszel_data:/beszel_data
+      - $HOME/homelab-data/beszel/beszel_socket:/beszel_socket
+    profiles:
+      - vps1
+
+  beszel-agent:
+    image: henrygd/beszel-agent
+    container_name: beszel-agent
+    user: 410:996 # beszel:docker
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      LISTEN: 45876
+      KEY: ${BESZEL_PUBLIC_KEY}
+    profiles:
+      - nuc
+      - vps2
+      - pi4
+
+  dozzle-agent:
+    image: amir20/dozzle:latest
+    container_name: dozzle-agent
+    command: agent
+    user: 412:996 # dozzle:docker
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./tmp:/tmp # needed to run as non-root
+    ports:
+      - ${VARIABLE_BIND_ADDRESS}:7007:7007
+    profiles:
+      - vps1
+      - vps2
+      - pi4
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    restart: unless-stopped
+    environment:
+      - PUID=414
+      - PGID=996
+    ports:
+      - ${VARIABLE_BIND_ADDRESS}:3001:3001
+    volumes:
+      - $HOME/homelab-data/uptime-kuma:/data
+    profiles:
+      - vps1
+
+networks:
+  default:
+    name: monitoring

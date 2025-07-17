@@ -9,3 +9,7 @@ services:
       - 5230:5230
     volumes:
       - $HOME/homelab-data/memos:/var/opt/memos
+
+networks:
+  default:
+    name: memos

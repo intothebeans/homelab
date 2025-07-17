@@ -1,0 +1,56 @@
+---
+name: reading
+services:
+  miniflux:
+    image: miniflux/miniflux:latest
+    container_name: miniflux
+    user: 450:950
+    ports:
+      - 127.0.0.1:9999:8080
+    environment:
+      - DATABASE_URL=postgres://miniflux:${MINIFLUX_DB_PASSWORD}@miniflux-db:5432/miniflux
+      - RUN_MIGRATIONS=1
+    depends_on:
+      miniflux-db:
+        condition: service_healthy
+    profiles:
+      - pi4
+
+  miniflux-db:
+    image: postgres:17-alpine
+    container_name: miniflux_db
+    user: 450:950
+    environment:
+      - POSTGRES_USER=miniflux
+      - POSTGRES_PASSWORD=${MINIFLUX_DB_PASSWORD}
+      - POSTGRES_DB=miniflux
+    volumes:
+      - $HOME/homelab-data/miniflux:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD, pg_isready, -U, miniflux]
+      interval: 10s
+      start_period: 30s
+    profiles:
+      - pi4
+
+  readeck:
+    image: codeberg.org/readeck/readeck:latest
+    container_name: readeck
+    user: 451:950
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:7900:8000
+    environment:
+      - READECK_LOG_LEVEL=info
+      - READECK_SERVER_HOST=0.0.0.0
+      - READECK_SERVER_PORT=8000
+      - READECK_ALLOWED_HOSTS=${READECK_ALLOWED_HOSTS}
+    volumes:
+      - /mnt/ssd/readeck:/readeck
+    healthcheck:
+      test: [CMD, /bin/readeck, healthcheck, -config, config.toml]
+      interval: 30s
+      timeout: 2s
+      retries: 3
+    profiles:
+      - nuc

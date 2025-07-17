@@ -8,12 +8,9 @@ services:
     restart: always
     ports:
       - 127.0.0.1:8090:8080
-      - 100.110.247.44:8009:8080
     env_file: .env
     volumes:
       - $HOME/homelab-data/firefly-iii/upload:/var/www/html/storage/upload
-    networks:
-      - firefly_iii
     depends_on:
       - db
 
@@ -23,22 +20,29 @@ services:
     hostname: db
     user: 437:930
     restart: always
-    env_file: .db.env
+    environment:
+      - MYSQL_DATABASE=firefly-iii
+      - MYSQL_USER=firefly
+      - MYSQL_PASSWORD=${FIREFLY_III_DB_PASSWORD}
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
     volumes:
       - $HOME/homelab-data/firefly-iii/db:/var/lib/mysql
-    networks:
-      - firefly_iii
 
   importer:
     image: fireflyiii/data-importer:latest
     container_name: firefly_iii_importer
     hostname: importer
     restart: always
+    environment:
+      - FIREFLY_III_URL=http://app:8080
+      - VANITY_URL=${IMPORTER_VANITY_URL}
+      - FIREFLY_III_ACCESS_TOKEN=${IMPORTER_ACCESS_TOKEN}
+      - VERIFY_TLS_SECURITY=true
+      - TRUSTED_PROXIES=**
+      - TZ=America/New_York
     ports:
-      - "8091:8080"
+      - "127.0.0.1:8091:8080"
     env_file: .importer.env
-    networks:
-      - firefly_iii
     depends_on:
       - app
 
@@ -47,8 +51,6 @@ services:
     container_name: firefly_iii_cron
     restart: always
     command: sh -c "echo \"*/30 * * * * wget -qO- http://app:8080/api/v1/cron/ELwfiGGVdCdQJsDV2X2sCQGXuTwPJuhq;echo\" | crontab - && crond -f -L /dev/stdout"
-    networks:
-      - firefly_iii
 
   firefly-pico:
     image: cioraneanu/firefly-pico:latest
@@ -56,10 +58,15 @@ services:
     restart: unless-stopped
     ports:
       - 127.0.0.1:6972:80
-      - 100.110.247.44:6973:80
-    env_file: .pico.env
-    networks:
-      - firefly_iii
+    environment:
+      - FIREFLY_URL=http://app:8080
+      - DB_CONNECTION=pgsql
+      - DB_HOST=firefly-pico-db
+      - DB_PORT=5432
+      - DB_DATABASE=firefly_pico
+      - DB_USERNAME=firefly_pico
+      - DB_PASSWORD=${PICO_POSTGRES_PASSWORD}
+      - TZ=America/New_York
     depends_on:
       - app
       - firefly-pico-db
@@ -69,12 +76,13 @@ services:
     container_name: firefly_pico_db
     user: 438:930
     restart: unless-stopped
-    env_file: .pico.env
+    environment:
+      - POSTGRES_USER=firefly_pico
+      - POSTGRES_PASSWORD=${PICO_POSTGRES_PASSWORD}
+      - POSTGRES_DB=firefly_pico
     volumes:
       - $HOME/homelab-data/firefly-pico/db:/var/lib/postgresql/data
-    networks:
-      - firefly_iii
 
 networks:
-  firefly_iii:
-    driver: bridge
+  default:
+    name: firefly-iii

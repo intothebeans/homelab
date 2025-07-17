@@ -6,7 +6,6 @@ services:
     container_name: zipline-db
     user: "433"
     restart: unless-stopped
-    env_file: .env
     environment:
       POSTGRES_USER: ${POSTGRESQL_USER}
       POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
@@ -24,9 +23,6 @@ services:
     container_name: zipline
     user: "433"
     restart: unless-stopped
-    ports:
-      - 3043:3000
-    env_file: .env
     environment:
       - DATABASE_URL=postgres://${POSTGRESQL_USER}:${POSTGRESQL_PASSWORD}@postgresql:5432/${POSTGRESQL_DB}
     volumes:

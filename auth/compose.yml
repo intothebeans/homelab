@@ -1,0 +1,55 @@
+---
+name: authentication
+services:
+  pocket-id:
+    image: ghcr.io/pocket-id/pocket-id:v1
+    container_name: pocket-id
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:1411:1411
+    environment:
+      - APP_URL=${POCKET_APP_URL}
+      - TRUST_PROXY=true
+      - PUID=420
+      - PGID=920
+      - ENCRYPTION_KEY=${POCKET_ENCRYPTION_KEY}
+      - ANALYTICS_DISABLED=true
+    volumes:
+      - $HOME/homelab-data/pocket-id:/app/data
+    healthcheck:
+      test: [CMD, /app/pocket-id, healthcheck]
+      interval: 1m30s
+      timeout: 5s
+      retries: 2
+      start_period: 10s
+    profiles:
+      - nuc
+
+  tinyauth:
+    image: ghcr.io/steveiliop56/tinyauth:v3
+    container_name: tinyauth
+    user: 421:920
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:1412:3000
+    environment:
+      - SECRET=${TINYAUTH_SECRET}
+      - APP_URL=${TINYAUTH_APP_URL}
+      - GENERIC_CLIENT_ID=${TINYAUTH_GENERIC_CLIENT_ID}
+      - GENERIC_CLIENT_SECRET=${TINYAUTH_GENERIC_CLIENT_SECRET}
+      - GENERIC_AUTH_URL=${POCKET_APP_URL}/authorize
+      - GENERIC_TOKEN_URL=http://pocket-id:1411/api/oidc/token
+      - GENERIC_USER_URL=http://pocket-id:1411/api/oidc/userinfo
+      - GENERIC_SCOPES=openid email profile groups
+      - GENERIC_NAME=Pocket ID
+      - DISABLE_CONTINUE=true
+      - OAUTH_AUTO_REDIRECT=generic
+    depends_on:
+      pocket-id:
+        condition: service_healthy
+    profiles:
+      - nuc
+
+networks:
+  default:
+    name: auth

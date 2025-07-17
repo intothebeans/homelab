@@ -17,7 +17,6 @@ services:
       - --server-password=${SECRET_PASSWORD}
     ports:
       - 51515:51515
-    env_file: .env
     volumes:
       - $HOME/homelab-data/kopia/config:/app/config
       - kopia-cache:/app/cache
@@ -28,3 +27,7 @@ services:
 volumes:
   kopia-cache:
     name: kopia-cache
+
+networks:
+  default:
+    name: backup

@@ -21,10 +21,10 @@ services:
     user: 460:960
     restart: unless-stopped
     ports:
-      - "7777:8080"
+      - ${VARIABLE_BIND_ADDRESS}:7777:8080
     environment:
       - SEARXNG_SECRET=${SEARXNG_SECRET}
-      - SEARXNG_BASE_URL=https://searx.beanscloud.me/
+      - SEARXNG_BASE_URL=${SEARXNG_BASE_URL}
       - UWSGI_WORKERS=4
       - UWSGI_THREADS=4
     volumes:

@@ -1,0 +1,56 @@
+---
+name: ytdl-sub
+services:
+  ytdl-sub:
+    image: ghcr.io/jmbannon/ytdl-sub:latest
+    container_name: ytdl-sub
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - PUID=442
+      - PGID=940
+      - TZ=America/New_York
+      - DOCKER_MODS=linuxserver/mods:universal-cron
+      - CRON_SCHEDULE="0 */6 * * *"
+      - CRON_RUN_ON_START=true
+    volumes:
+      - ./config:/config
+      - /mnt/ssd/media:/data
+
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:8096:8096
+    env_file: .env
+    environment:
+      - PUID=441
+      - PGID=940
+      - TZ=America/New_York
+      - DOCKER_MODS=linuxserver/mods:jellyfin-opencl-intel
+    volumes:
+      - $HOME/homelab-data/jellyfin:/config
+      - /mnt/ssd/media:/media
+    devices:
+      - /dev/dri:/dev/dri
+
+  calibre-web:
+    image: lscr.io/linuxserver/calibre-web:latest
+    container_name: calibre-web
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:8030:8083
+    env_file: .env
+    environment:
+      - PUID=440
+      - PGID=940
+      - TZ=America/New_York
+      - DOCKER_MODS=linuxserver/mods:universal-calibre
+    volumes:
+      - $HOME/homelab-data/calibre-web:/config
+      - /mnt/ssd/calibreLibrary:/books
+
+networks:
+  default:
+    name: media

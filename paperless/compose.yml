@@ -17,7 +17,7 @@ services:
     environment:
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
-      POSTGRES_PASSWORD: paperless
+      POSTGRES_PASSWORD: ${PAPERLESS_DB_PASSWORD}
     volumes:
       - $HOME/homelab-data/paperless/db:/var/lib/postgresql/data
 
@@ -27,18 +27,25 @@ services:
     restart: unless-stopped
     ports:
       - "127.0.0.1:12000:8000"
-      - "100.110.247.44:12001:8000"
-    env_file: .env
     environment:
-      PAPERLESS_REDIS: redis://broker:6379
-      PAPERLESS_DBHOST: db
-      PAPERLESS_TIKA_ENABLED: 1
-      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
-      PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+      - PAPERLESS_REDIS=redis://broker:6379
+      - PAPERLESS_DBHOST=db
+      - PAPERLESS_DBPASS=${PAPERLESS_DB_PASSWORD}
+      - PAPERLESS_TIKA_ENABLED=1
+      - PAPERLESS_TIKA_GOTENBERG_ENDPOINT=http://gotenberg:3000
+      - PAPERLESS_TIKA_ENDPOINT=http://tika:9998
+      - PAPERLESS_SECRET_KEY=${PAPERLESS_SECRET_KEY}
+      - PAPERLESS_TIMEZONE=America/New_York
+      - USERMAP_UID=430
+      - USERMAP_GID=930
+      - PAPERLESS_OCR_LANGUAGE=eng
+      - PAPERLESS_FILENAME_FORMAT={{created_year}}/{{created_month}}/{{correspondent}}/{{title}}
+      - PAPERLESS_CONSUMER_DISABLE=true
+      - PAPERLESS_EMAIL_PARSE_DEFAULT_LAYOUT=2
     volumes:
-      - ${DATA_DIRECTORY}/paperlessv2/data:/usr/src/paperless/data
-      - ${DATA_DIRECTORY}/paperlessv2/media:/usr/src/paperless/media
-      - ${DATA_DIRECTORY}/paperlessv2/export:/usr/src/paperless/export
+      - ${DATA_DIRECTORY}/data:/usr/src/paperless/data
+      - ${DATA_DIRECTORY}/media:/usr/src/paperless/media
+      - ${DATA_DIRECTORY}/export:/usr/src/paperless/export
     depends_on:
       - db
       - broker
@@ -48,12 +55,12 @@ services:
   gotenberg:
     image: docker.io/gotenberg/gotenberg:8.7
     container_name: gotenberg
-    user: 430:930
-    restart: unless-stopped
     command:
       - "gotenberg"
       - "--chromium-disable-javascript=true"
       - "--chromium-allow-list=file:///tmp/.*"
+    restart: unless-stopped
+    user: 430:930
 
   tika:
     image: docker.io/apache/tika:latest
