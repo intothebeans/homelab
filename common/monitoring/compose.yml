@@ -33,7 +33,7 @@ services:
     ports:
       - 8088:8080
     environment:
-      - DOZZLE_REMOTE_AGENT=${DOZZLE_REMOTE_AGENTS}
+      - DOZZLE_REMOTE_AGENT=${DOZZLE_REMOTE_AGENTS:-none}
       - DOZZLE_ENABLE_ACTIONS=true
       - DOZZLE_ENABLE_SHELL=true
     volumes:
@@ -44,7 +44,7 @@ services:
   beszel:
     image: henrygd/beszel:latest
     container_name: beszel
-    user: 412:996 # dozzle:docker
+    user: 410:996 # beszel:docker
     restart: unless-stopped
     ports:
       - ${VARIABLE_BIND_ADDRESS}:8090:8090
@@ -62,13 +62,15 @@ services:
     network_mode: host
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $HOME/homelab-data/beszel/beszel_socket:/beszel_socket
     environment:
-      LISTEN: 45876
+      LISTEN: ${BESZEL_LISTEN_ADDRESS:-45876}
       KEY: ${BESZEL_PUBLIC_KEY}
     profiles:
       - nuc
       - vps2
       - pi4
+      - vps1
 
   dozzle-agent:
     image: amir20/dozzle:latest
