@@ -41,7 +41,7 @@ services:
       - TRUSTED_PROXIES=**
       - TZ=America/New_York
     ports:
-      - "127.0.0.1:8091:8080"
+      - 127.0.0.1:8091:8080
     env_file: .importer.env
     depends_on:
       - app
@@ -50,6 +50,7 @@ services:
     image: alpine
     container_name: firefly_iii_cron
     restart: always
+    # yamllint disable-line rule:line-length
     command: sh -c "echo \"*/30 * * * * wget -qO- http://app:8080/api/v1/cron/ELwfiGGVdCdQJsDV2X2sCQGXuTwPJuhq;echo\" | crontab - && crond -f -L /dev/stdout"
 
   firefly-pico:
