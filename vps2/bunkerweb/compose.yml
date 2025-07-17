@@ -2,81 +2,18 @@
 name: bunkerweb
 services:
   bunkerweb:
-    image: bunkerity/bunkerweb:1.6.2
+    image: bunkerity/bunkerweb-all-in-one:1.6.2
     container_name: bunkerweb
+    user: "422"
     restart: unless-stopped
     ports:
       - 80:8080/tcp
       - 443:8443/tcp
       - 443:8443/udp
     env_file: .env
-    networks:
-      - bw-services
-      - bw-universe
-
-  bw-scheduler:
-    image: bunkerity/bunkerweb-scheduler:1.6.2
-    container_name: bw-scheduler
-    restart: unless-stopped
-    env_file: .env
     volumes:
       - $HOME/homelab-data/bunkerweb/data:/data
-    networks:
-      - bw-universe
-      - bw-db
-
-  bw-db:
-    image: mariadb:11
-    container_name: bw-db
-    user: "422"
-    restart: unless-stopped
-    env_file: .env
-    volumes:
-      - $HOME/homelab-data/bunkerweb/db:/var/lib/mysql
-    networks:
-      - bw-universe
-      - bw-db
-    mem_limit: 256M
-    memswap_limit: 512M
-
-  bw-ui:
-    image: bunkerity/bunkerweb-ui:1.6.2
-    container_name: bw-ui
-    restart: unless-stopped
-    env_file: .env
-    networks:
-      - bw-universe
-      - bw-db
-
-  redis:
-    image: valkey/valkey:7-alpine
-    container_name: bw-redis
-    user: "422"
-    restart: unless-stopped
-    command: >
-      redis-server
-      --maxmemory 256mb
-      --maxmemory-policy allkeys-lru
-      --save 60 1000
-      --appendonly yes
-    volumes:
-      - redis-data:/data
-    networks:
-      - bw-universe
 
 networks:
-  bw-universe:
-    name: bw-universe
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.20.30.0/24
-  bw-services:
-    name: bw-services
-  bw-db:
-    name: bw-db
-
-volumes:
-  redis-data:
-    name: bw-redis-data
-    external: true
+  default:
+    name: bunkerweb
