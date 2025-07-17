@@ -36,8 +36,8 @@ services:
     networks:
       - bw-universe
       - bw-db
-    mem_limit: 512M
-    memswap_limit: 1G
+    mem_limit: 256M
+    memswap_limit: 512M
 
   bw-ui:
     image: bunkerity/bunkerweb-ui:1.6.2
