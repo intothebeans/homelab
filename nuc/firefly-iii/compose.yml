@@ -42,7 +42,6 @@ services:
       - TZ=America/New_York
     ports:
       - 127.0.0.1:8091:8080
-    env_file: .importer.env
     depends_on:
       - app
 
