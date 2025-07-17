@@ -86,20 +86,6 @@ services:
       - vps2
       - pi4
 
-  uptime-kuma:
-    image: louislam/uptime-kuma:1
-    container_name: uptime-kuma
-    restart: unless-stopped
-    environment:
-      - PUID=414
-      - PGID=996
-    ports:
-      - ${VARIABLE_BIND_ADDRESS}:3001:3001
-    volumes:
-      - $HOME/homelab-data/uptime-kuma:/data
-    profiles:
-      - vps1
-
 networks:
   default:
     name: monitoring

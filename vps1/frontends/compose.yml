@@ -1,0 +1,31 @@
+---
+name: frontends
+services:
+  redlib:
+    image: quay.io/redlib/redlib:latest
+    container_name: redlib
+    user: nobody
+    restart: always
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    env_file: .env
+    healthcheck:
+      test:
+        [CMD, wget, --spider, -q, --tries=1, "http://localhost:8080/settings"]
+      interval: 5m
+      timeout: 3s
+
+  anonymousoverflow:
+    container_name: app
+    image: ghcr.io/httpjamesm/anonymousoverflow:release
+    environment:
+      - APP_URL=https://ao.intothebeans.net
+      - JWT_SIGNING_SECRET=${JWT_SIGNING_SECRET}
+    restart: always
+
+networks:
+  default:
+    name: frontends

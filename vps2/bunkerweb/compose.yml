@@ -36,6 +36,8 @@ services:
     networks:
       - bw-universe
       - bw-db
+    mem_limit: "512M"
+    memswap_limit: "1G"
 
   bw-ui:
     image: bunkerity/bunkerweb-ui:1.6.2
@@ -45,6 +47,8 @@ services:
     networks:
       - bw-universe
       - bw-db
+    mem_limit: "512M"
+    memswap_limit: "1G"
 
   redis:
     image: valkey/valkey:7-alpine
