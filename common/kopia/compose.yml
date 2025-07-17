@@ -16,7 +16,7 @@ services:
       - --server-username=${USERNAME}
       - --server-password=${SECRET_PASSWORD}
     ports:
-      - 51515:51515
+      - ${VARIABLE_BIND_ADDRESS}:51515:51515
     volumes:
       - $HOME/homelab-data/kopia/config:/app/config
       - kopia-cache:/app/cache
